@@ -14,7 +14,7 @@ namespace BuildingXamarinStudioAddins
 		Button confirmButton;
 		Button helpButton;
 
-		//https://cloud.google.com/translate/docs/translating-text
+		//
 
 		public ActivationDialog()
 		{
@@ -48,12 +48,11 @@ namespace BuildingXamarinStudioAddins
 				this.Hide();
 			};
 
-
 			confirmButton = new Button();
 			confirmButton.Label = "How Do I Get An API Key?";
 			confirmButton.Clicked += (object sender, EventArgs e) =>
 			{
-				PropertyService.Set(PropertyKeys.TranslationApiPropertyKey, apiKeyEntry.Text);
+				Process.Start("https://cloud.google.com/translate/docs/translating-text");
 			};
 
 			VBox.Add(informationLabel);

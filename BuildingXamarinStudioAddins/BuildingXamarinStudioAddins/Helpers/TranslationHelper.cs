@@ -19,22 +19,22 @@ namespace BuildingXamarinStudioAddins
 			try
 			{
 				string apiKeyParam = $"key={PropertyService.Get(PropertyKeys.TranslationApiPropertyKey, "")}";
-				string languageParam = $"";
-				string sourceTextParam = $"";
+				string languageParam = $"target={targetLanguage}";
+				string sourceTextParam = $"q={Url}";
 
 
-					var url = TranslationEndpoint + string.Join("&", apiKeyParam, languageParam, sourceTextParam);
+				var url = TranslationEndpoint + string.Join("&", apiKeyParam, languageParam, sourceTextParam);
 
-					var client = new WebClient();
-					client.DownloadProgressChanged += (sender, e) =>
+				var client = new WebClient();
+				client.DownloadProgressChanged += (sender, e) =>
+				{
+					Runtime.RunInMainThread(() =>
 					{
-						Runtime.RunInMainThread(() =>
-						{
-							progressDialog.Progress = (double)e.ProgressPercentage / 100.0; ;
-						});
-					};
+						progressDialog.Progress = (double)e.ProgressPercentage / 100.0; ;
+					});
+				};
 
-					var content = new WebClient().DownloadString(url);
+				var content = client.DownloadString(url);
 
 			}
 			catch (Exception ex)

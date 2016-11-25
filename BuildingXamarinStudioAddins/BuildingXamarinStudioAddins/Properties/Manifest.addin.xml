@@ -2,13 +2,35 @@
 <ExtensionModel>
 
 	<Extension path = "/MonoDevelop/SourceEditor2/ContextMenu/Editor">
-		<CommandItem id = "MFractor.Commands.Xml.EscapeSelection" insertafter="MonoDevelop.Refactoring.RefactoryCommands.CurrentRefactoryOperations"/>
+		<CommandItem id = "BuildingXamarinStudioAddins.Commands.TranslateString" insertafter="MonoDevelop.Refactoring.RefactoryCommands.CurrentRefactoryOperations"/>
 	</Extension>
 
 	<!-- StartupHandler Operations -->
 	<Extension path = "/MonoDevelop/Ide/StartupHandlers">
 		<Class class = "MFractor.ResyncDatabaseHandler"/>
 		<Class class = "MFractor.StartupHandler"/>
+	</Extension>
+
+	<!-- Commands -->
+    <Extension path = "/MonoDevelop/Ide/Commands">
+		<Category _name = "Android Resource Navigation" id = "AndroidResourceNavigation"/>
+        <Command id = "BuildingXamarinStudioAddins.Commands.TranslateString"
+        	insertbefore="MonoDevelop.SourceEditor.SourceEditorCommands.MarkerOperations"
+             _label = "Translate String"
+             shortcut = "Alt|T"
+             _description = "Translates a C# string from english to a user selected other language" 
+         	defaultHandler = "BuildingXamarinStudioAddins.TranslateStringCommand"/>
+
+        <Command id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"
+             _label = "Set Translation API Key"
+             _description = "Opens " 
+         	defaultHandler = "MFractor.Forms.Commands.Navigation.XamarinFormsGoToDeclarationHandler"/>
+
+    </Extension>
+
+    <!-- Tools Menu Items -->
+    <Extension path = "/MonoDevelop/Ide/MainMenu/Tools">
+		<CommandItem id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"/>
 	</Extension>
 	
 </ExtensionModel>
