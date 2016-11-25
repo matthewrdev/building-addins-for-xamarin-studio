@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionModel>
+
+	<Extension path = "/MonoDevelop/SourceEditor2/ContextMenu/Editor">
+		<CommandItem id = "MFractor.Commands.Xml.EscapeSelection" insertafter="MonoDevelop.Refactoring.RefactoryCommands.CurrentRefactoryOperations"/>
+	</Extension>
+
+	<!-- StartupHandler Operations -->
+	<Extension path = "/MonoDevelop/Ide/StartupHandlers">
+		<Class class = "MFractor.ResyncDatabaseHandler"/>
+		<Class class = "MFractor.StartupHandler"/>
+	</Extension>
+	
+</ExtensionModel>
