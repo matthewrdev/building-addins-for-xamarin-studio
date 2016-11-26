@@ -1,36 +1,36 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ExtensionModel>
 
+    <!-- COmmands -->
+    <Extension path = "/MonoDevelop/Ide/MainMenu/Tools">
+		<CommandItem id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"/>
+	</Extension>
+
+	<!-- Commands that are included in the right click context menu -->
 	<Extension path = "/MonoDevelop/SourceEditor2/ContextMenu/Editor">
-		<CommandItem id = "BuildingXamarinStudioAddins.Commands.TranslateString" insertafter="MonoDevelop.Refactoring.RefactoryCommands.CurrentRefactoryOperations"/>
+		<CommandItem id = "BuildingXamarinStudioAddins.Commands.TranslateString"/>
 	</Extension>
 
-	<!-- StartupHandler Operations -->
+	<!-- Commands that should be triggered when the IDE opens  -->
 	<Extension path = "/MonoDevelop/Ide/StartupHandlers">
-		<Class class = "MFractor.ResyncDatabaseHandler"/>
-		<Class class = "MFractor.StartupHandler"/>
+		<Class class = "BuildingXamarinStudioAddins.StartupHandler"/>
 	</Extension>
 
-	<!-- Commands -->
+	<!-- A list of commands we are registering into  -->
     <Extension path = "/MonoDevelop/Ide/Commands">
 		<Category _name = "Android Resource Navigation" id = "AndroidResourceNavigation"/>
         <Command id = "BuildingXamarinStudioAddins.Commands.TranslateString"
-        	insertbefore="MonoDevelop.SourceEditor.SourceEditorCommands.MarkerOperations"
-             _label = "Translate String"
+             _label = "Translate to..."
              shortcut = "Alt|T"
+			type="array"
              _description = "Translates a C# string from english to a user selected other language" 
          	defaultHandler = "BuildingXamarinStudioAddins.TranslateStringCommand"/>
 
         <Command id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"
              _label = "Set Translation API Key"
              _description = "Opens " 
-         	defaultHandler = "MFractor.Forms.Commands.Navigation.XamarinFormsGoToDeclarationHandler"/>
+         	defaultHandler = "MFractor."/>
 
     </Extension>
-
-    <!-- Tools Menu Items -->
-    <Extension path = "/MonoDevelop/Ide/MainMenu/Tools">
-		<CommandItem id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"/>
-	</Extension>
 	
 </ExtensionModel>

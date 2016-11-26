@@ -5,7 +5,7 @@ using MonoDevelop.Core;
 
 namespace BuildingXamarinStudioAddins
 {
-	public class ActivationDialog : Dialog
+	public class ConfigureApiKeyDialog : Dialog
 	{
 		Entry apiKeyEntry;
 
@@ -14,9 +14,7 @@ namespace BuildingXamarinStudioAddins
 		Button confirmButton;
 		Button helpButton;
 
-		//
-
-		public ActivationDialog()
+		public ConfigureApiKeyDialog()
 		{
 			const int windowWidth = 400;
 			const int windowHeight = 150;
@@ -45,12 +43,13 @@ namespace BuildingXamarinStudioAddins
 			confirmButton.Clicked += (object sender, EventArgs e) =>
 			{
 				PropertyService.Set(PropertyKeys.TranslationApiPropertyKey, apiKeyEntry.Text);
+				PropertyService.SaveProperties ();
 				this.Hide();
 			};
 
-			confirmButton = new Button();
-			confirmButton.Label = "How Do I Get An API Key?";
-			confirmButton.Clicked += (object sender, EventArgs e) =>
+			helpButton = new Button();
+			helpButton.Label = "How Do I Get An API Key?";
+			helpButton.Clicked += (object sender, EventArgs e) =>
 			{
 				Process.Start("https://cloud.google.com/translate/docs/translating-text");
 			};

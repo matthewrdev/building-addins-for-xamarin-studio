@@ -16,7 +16,8 @@ namespace BuildingXamarinStudioAddins
 			if (PropertyService.HasValue(PropertyKeys.TranslationApiPropertyKey) == false)
 			{
 				// Show the API key dialog.
-
+				var dialog = new ConfigureApiKeyDialog ();
+				dialog.Show ();
 			}
 		}
 	}

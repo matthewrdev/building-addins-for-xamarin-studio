@@ -52,6 +52,7 @@
     <AddinReference Include="MonoDevelop.CSharpBinding" />
     <AddinReference Include="MonoDevelop.Refactoring" />
     <AddinReference Include="MonoDevelop.Xamarin.Ide" />
+    <AddinReference Include="MonoDevelop.SourceEditor2" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -100,6 +101,8 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoDevelop.Addins.0.3.3\build\net40\MonoDevelop.Addins.targets" Condition="Exists('..\packages\MonoDevelop.Addins.0.3.3\build\net40\MonoDevelop.Addins.targets')" />

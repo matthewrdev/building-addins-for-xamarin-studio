@@ -9,9 +9,17 @@ namespace BuildingXamarinStudioAddins
 		{
 		}
 
+		protected override void Update (CommandInfo info)
+		{
+			info.Enabled = true;
+			info.Visible = true;
+			base.Update (info);
+		}
+
 		protected override void Run()
 		{
-			// TODO: Show the api key dialog.
+			var dialog = new ConfigureApiKeyDialog ();
+			dialog.Show ();
 			
 			base.Run();
 		}
