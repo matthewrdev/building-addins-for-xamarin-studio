@@ -19,7 +19,6 @@ namespace BuildingXamarinStudioAddins
 				string languageParam = $"target={targetLanguage}";
 				string sourceTextParam = $"q={System.Web.HttpUtility.UrlEncode(textToTranslate)}";
 
-
 				var url = TranslationEndpoint + string.Join("&", apiKeyParam, languageParam, sourceTextParam);
 
 				var client = new WebClient();
@@ -29,7 +28,6 @@ namespace BuildingXamarinStudioAddins
 				dynamic translation = Newtonsoft.Json.JsonConvert.DeserializeObject (content);
 
 				translationResult = translation.data.translations [0].translatedText;
-
 			}
 			catch (Exception ex)
 			{

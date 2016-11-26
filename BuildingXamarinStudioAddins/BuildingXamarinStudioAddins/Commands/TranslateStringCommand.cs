@@ -30,7 +30,6 @@ namespace BuildingXamarinStudioAddins
 		protected override void Update(CommandArrayInfo info)
 		{
 			if (PropertyService.HasValue(PropertyKeys.TranslationApiPropertyKey) == false) {
-				
 				return; // Can't run 
 			}
 
@@ -55,13 +54,10 @@ namespace BuildingXamarinStudioAddins
 					info.Add (commandSet);
 				}
 			}
-			
-			base.Update(info);
 		}
 
 		protected override void Run(object dataItem)
 		{
-
 			var doc = IdeApp.Workbench.ActiveDocument;
 
 			var editor = doc.Editor;
@@ -77,19 +73,19 @@ namespace BuildingXamarinStudioAddins
 				var text = token.Text.Substring (1, token.Text.Length - 2); // Grab the text without the "" characters.
 				var translation = TranslationHelper.Translate (text, language);
 
-				TextReplaceChange translateChange = new TextReplaceChange ();
-				translateChange.RemovedChars = token.Text.Length;
-				translateChange.InsertedText = "\"" + translation + "\"";
-				translateChange.Description = "Translate the existin string content to " + language;
-				translateChange.Offset = token.SpanStart;
-				translateChange.FileName = doc.FileName;
+				if (!string.IsNullOrEmpty (translation)) {
 
-				var monitor = IdeApp.Workbench.ProgressMonitors.GetBackgroundProgressMonitor ("Apply translation", null);
-				RefactoringService.AcceptChanges (monitor, new List<Change> () { translateChange });
+					TextReplaceChange translateChange = new TextReplaceChange ();
+					translateChange.RemovedChars = token.Text.Length;
+					translateChange.InsertedText = "\"" + translation + "\"";
+					translateChange.Description = "Translate the existin string content to " + language;
+					translateChange.Offset = token.SpanStart;
+					translateChange.FileName = doc.FileName;
+
+					var monitor = IdeApp.Workbench.ProgressMonitors.GetBackgroundProgressMonitor ("Apply translation", null);
+					RefactoringService.AcceptChanges (monitor, new List<Change> () { translateChange });
+				}
 			}
-
-
-			base.Run(dataItem);
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace BuildingXamarinStudioAddins
 
 			VBox.SetSizeRequest(windowWidth, windowHeight);
 
-			informationLabel = new Label("Enter your API key for the Google Translations");
+			informationLabel = new Label("Enter your API key for Google Translation Services");
 			informationLabel.Layout.Alignment = Pango.Alignment.Center;
 
 			apiKeyEntry = new Entry();

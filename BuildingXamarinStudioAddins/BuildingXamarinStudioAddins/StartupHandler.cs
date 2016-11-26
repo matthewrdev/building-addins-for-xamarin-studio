@@ -5,6 +5,9 @@ using MonoDevelop.Ide;
 
 namespace BuildingXamarinStudioAddins
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class StartupHandler : CommandHandler
 	{
 		public StartupHandler()

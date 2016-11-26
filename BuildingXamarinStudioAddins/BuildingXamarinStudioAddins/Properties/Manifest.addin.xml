@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ExtensionModel>
 
-    <!-- COmmands -->
+    <!-- Commands to be included in the ""Tools" menu.-->
     <Extension path = "/MonoDevelop/Ide/MainMenu/Tools">
+		<!-- The `CommandItem` element references a command by id that has been added to the "/MonoDevelop/Ide/Commands" extension point -->
 		<CommandItem id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"/>
 	</Extension>
 
@@ -13,12 +14,14 @@
 
 	<!-- Commands that should be triggered when the IDE opens  -->
 	<Extension path = "/MonoDevelop/Ide/StartupHandlers">
+		<!-- The `Class` element references a C#  class within our addin. We must include the full namespace and class.-->
 		<Class class = "BuildingXamarinStudioAddins.StartupHandler"/>
 	</Extension>
 
-	<!-- A list of commands we are registering into  -->
+	<!-- A list of commands we are registering into Commands extension point.-->
     <Extension path = "/MonoDevelop/Ide/Commands">
-		<Category _name = "Android Resource Navigation" id = "AndroidResourceNavigation"/>
+
+		<!-- Here we declare a new command -->
         <Command id = "BuildingXamarinStudioAddins.Commands.TranslateString"
              _label = "Translate to..."
              shortcut = "Alt|T"
