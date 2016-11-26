@@ -29,7 +29,7 @@
         <Command id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"
              _label = "Set Translation API Key"
              _description = "Opens " 
-         	defaultHandler = "MFractor."/>
+         	defaultHandler = "BuildingXamarinStudioAddins.ConfigureApiKeyCommand"/>
 
     </Extension>
 	

@@ -16,6 +16,8 @@ namespace BuildingXamarinStudioAddins
 			base.Update (info);
 		}
 
+
+
 		protected override void Run()
 		{
 			var dialog = new ConfigureApiKeyDialog ();

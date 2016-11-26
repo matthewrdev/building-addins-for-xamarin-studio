@@ -47,10 +47,11 @@ namespace BuildingXamarinStudioAddins
 
 					var commandSet = new CommandInfoSet ();
 
-
+					commandSet.CommandInfos.Add (new CommandInfo ("English"), new TranslationSetting ("en", token));
 					commandSet.CommandInfos.Add (new CommandInfo ("German"), new TranslationSetting("de", token));
 					commandSet.CommandInfos.Add (new CommandInfo ("Spanish"), new TranslationSetting ("es", token));
 					commandSet.CommandInfos.Add (new CommandInfo ("French"), new TranslationSetting ("fr", token));
+
 					info.Add (commandSet);
 				}
 			}
