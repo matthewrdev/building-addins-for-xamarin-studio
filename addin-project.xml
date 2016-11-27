@@ -1,0 +1,7 @@
+<AddinProject appVersion="6.0">
+    <Project platforms="Mac Win32">
+        <AddinFile>BuildingXamarinStudioAddins/bin/Release/BuildingXamarinStudioAddins.dll</AddinFile>
+        <BuildFile>BuildingXamarinStudioAddins.sln</BuildFile>
+        <BuildConfiguration>Release</BuildConfiguration>
+    </Project>
+</AddinProject>

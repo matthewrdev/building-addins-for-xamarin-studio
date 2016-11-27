@@ -9,6 +9,17 @@ using MonoDevelop.Refactoring;
 
 namespace BuildingXamarinStudioAddins
 {
+	/// <summary>
+	/// The TranslateStringCommand takes a C# string literal beneath the users cursor and translates it
+	/// to another language using Google Translation Services.
+	/// 
+	/// This command demonstrates multiple concepts:
+	///  * Using Update to reject if the command cannot run. (User has no API key provided, cursor not over a string literal)
+	///  * Using Update to add several sub-commands into the users context menu.
+	///  * Passing a data object between Update and Run.
+	///  * Implementing the Run callback to perform an action (translate a string literal).
+	///  * Using the RefactoringService to apply a refactoring action to the users workspace.
+	/// </summary>
 	public class TranslateStringCommand : CommandHandler
 	{
 		public TranslateStringCommand()
@@ -27,6 +38,10 @@ namespace BuildingXamarinStudioAddins
 			}
 		}
 
+		/// <summary>
+		/// The Update method is a 
+		/// </summary>
+		/// <param name="info">Info.</param>
 		protected override void Update(CommandArrayInfo info)
 		{
 			if (PropertyService.HasValue(PropertyKeys.TranslationApiPropertyKey) == false) {
@@ -56,6 +71,16 @@ namespace BuildingXamarinStudioAddins
 			}
 		}
 
+		/// <summary>
+		/// Our Run override is used to perform an action.
+		/// 
+		/// Here we take the previously selected translation menu item and generate a translation for the string literal
+		/// that is under the users cursor.
+		/// 
+		/// We then create a TextReplaceChange and apply it using the RefactoringService. This will write new text (source code)
+		/// at the location that we specify and add an undo operation into the undo buffer for us.
+		/// </summary>
+		/// <param name="dataItem">Data item.</param>
 		protected override void Run(object dataItem)
 		{
 			var doc = IdeApp.Workbench.ActiveDocument;
@@ -75,6 +100,7 @@ namespace BuildingXamarinStudioAddins
 
 				if (!string.IsNullOrEmpty (translation)) {
 
+					// 
 					TextReplaceChange translateChange = new TextReplaceChange ();
 					translateChange.RemovedChars = token.Text.Length;
 					translateChange.InsertedText = "\"" + translation + "\"";
@@ -83,6 +109,8 @@ namespace BuildingXamarinStudioAddins
 					translateChange.FileName = doc.FileName;
 
 					var monitor = IdeApp.Workbench.ProgressMonitors.GetBackgroundProgressMonitor ("Apply translation", null);
+
+					// Here we apply 
 					RefactoringService.AcceptChanges (monitor, new List<Change> () { translateChange });
 				}
 			}

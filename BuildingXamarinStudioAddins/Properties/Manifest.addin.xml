@@ -7,7 +7,10 @@
 		<CommandItem id = "BuildingXamarinStudioAddins.Commands.ConfigureApiKey"/>
 	</Extension>
 
-	<!-- Commands that are included in the right click context menu -->
+	<!-- 
+		Commands that are included in the right click context menu 
+		We MUST have an Addin Reference to MonoDevelop.SourceEditor2 for this extension path to take effect.
+	-->
 	<Extension path = "/MonoDevelop/SourceEditor2/ContextMenu/Editor">
 		<CommandItem id = "BuildingXamarinStudioAddins.Commands.TranslateString"/>
 	</Extension>

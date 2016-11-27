@@ -1,17 +1,13 @@
 # Building Xamarin Studio Addins
 **Matthew Robbins - Creator Of [MFractor](http://www.mfractor.com/)**
 
-This repository is the accompanying source code for the Xamarin University guest lecture, "Building Xamarin Studio Addins For Xamarin Studio".
+This repository is the accompanying source code for the Xamarin University guest lecture, **Building Xamarin Studio Addins For Xamarin Studio**.
 
 Learn how to take an Addin from concept to deployment using the Addin Maker, Xamarin Studio and mdtool.
 
-This source code contains a "Translate String" Addin; users can right click on a C# string literal and translate it to another language!
+This source code contains a **Translate String** Addin; users can right click on a C# string literal and translate it to another language!
 
 ![translation demo](images/translate-demo.gif)
-
-Importantly, this addin demonstrates the following concepts:
-
-
 
 ### Table of Contents
 
@@ -25,8 +21,8 @@ Importantly, this addin demonstrates the following concepts:
   * Testing and Debugging
   * Packaging Your Addin
   * Publishing Your Addin
-  * Closing Words
   * Resources
+  * Closing Words
 
 ## Installing the Addin Maker
 Let's get started by installing the Addin Maker into Xamarin Studio.
@@ -81,17 +77,37 @@ A `CommandHandler` is an action that can be executed within a certain context wi
 Let's dig through some of the essential APIs that you may need to use
 
 #### IdeApp
-The `IdeApp` static class is your entry point into most of Xamarin Studio. It exposes the `Workbench`, the `Workspace` as well
+The `MonoDevelop.Ide.IdeApp` static class is your entry point into most of Xamarin Studio. It exposes the `Workbench`, the `Workspace`, various services and life cycle methods such as when the IDE is exiting.
+
+Typically the `IdeApp` class is used to access the `Workbench` and `Workspace`.
 
 #### IdeApp.Workbench
+The
 
 #### IdeApp.Workspace
 
 #### RefactoringService
+When developing an Addin, we'll often want to make changes to a users source code and have undo-redo history
 
 #### PropertyService
-The static class ``
+The static class `MonoDevelop.Core.PropertyService` is used to store user configurations for the Ide installation.
 
+The `PropertyService` is commonly used to store configuration settings that are specific to your addin. For instance, we can store a variable that denotes if it was the addins first run using the code below:
+
+````
+if (!PropertyService.HasValue("my_addin.is_first_run")
+   || PropertyService.Get("my_addin.is_first_run", true))
+{
+  PropertyService.Set("my_addin.is_first_run", false);
+  PropertyService.SaveProperties();
+}
+````
+
+Here we
+ * Use `HasValue` to determine if a value is stored within the users properties.
+ * Use `Get` to retrive a value from the `PropertyService`; note that we can provide a default value to return when there property does exist.
+ * Use `Set` to store a new property.
+ * Use `SaveProperties` to commit our changes to the properties. You **must** do this to ensure your properties are persisted between Ide sessions.
 
 ## Testing And Debugging
 
@@ -107,5 +123,6 @@ Xamarin Studio addins are distributed in the `.mpack ` format; this is a zip arc
 ## Publishing Your Addin
 Xamarin Studio addins can be
 
+## Resources
 
 ## Closing Words
