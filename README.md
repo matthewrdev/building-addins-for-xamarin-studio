@@ -15,7 +15,6 @@ This source code contains a **Translate String** Addin; users can right click on
   * Creating Your First Addin
   * The MonoDevelop Extension Model
   * An Addin Project Structure
-  * Command Handlers
   * Some Essential APIs
   * The Translation Addin
   * Testing and Debugging
@@ -53,7 +52,11 @@ Go ahead and create your first addin!
 ## The MonoDevelop Extension Model
 Before we get coding, it's very important to cover some theory.
 
-MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third
+MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third party libraries to extend behavior within the main application. An extension path
+
+For example, the source editor addin in Xamarin Studio exposes an *Extension Path* that let's third parties inject commands into the right click context menu. In our manifest (discussed later) we can declare
+
+An in-depth discussion on the extension model is beyond the scope of this tutorial; for in-depth information please read the Mono Extensino Model documentation.
 
 ## An Addin Project Structure
 
@@ -62,21 +65,20 @@ You'll see we now have a blank project with a few files under the projects **Pro
 ![The Addin project structure](images/addin-project-structure.png)
 
 #### Manifest.addin.xml
-The
+The addin manifest defines what we are extending within Xamarin Studio; without this file our
 
 #### AddinInfo.cs
 The [AddinInfo.cs](uildingXamarinStudioAddins/Propeties/AddinInfo.cs) file contains the assembly level attributes
 
 #### Addin References
 
+## Some Essential APIS
+Before we review the translation addin, let's dig through some of the essential APIs that are used:
 
-## Command Handlers
+#### CommandHandler
 One of the most common objects we'll create when building a Xamarin Studio addin are implementations of `CommandHandler`'s.
 
-A `CommandHandler` is an action that can be executed within a certain context within Xamarin Studio; we register a
-
-## Some Essential APIS
-Let's dig through some of the essential APIs that you may need to use:
+A `CommandHandler` is an action that can be executed within a certain context within Xamarin Studio; we register a command handler into an *extension path*, used `Update` to decide if it can execute and finally use `Run` to perform an action.
 
 #### IdeApp
 The `MonoDevelop.Ide.IdeApp` static class is your entry point into most of Xamarin Studio. It exposes the `Workbench`, the `Workspace`, various services and life cycle methods such as when the IDE is exiting.
@@ -157,11 +159,25 @@ th
 #### SyntaxTokenHelper
 [Helpers/SyntaxTokenHelper.cs](BuildingXamarinStudioAddins/Helpers/SyntaxTokenHelper.cs)
 
+The syntax token helper class is used to inspect the C# syntax tree and retrieve a string literal syntax node that is beneath the users cursor.
+
+Importantly, this class demonstrates:
+
+ * Retrieving the Roslyn analysis document from a MonoDevelop gui document.
+ * Inspecting the Abstract Syntax Tree and locating the `SyntaxNode` at a specified location.
+ * Inspecting a `SyntaxNode` type and checking if it is a string literal.
+
+This class offers a *tiny* peek into what can be accomplished using Roslyn.
+
 #### TranslationHelper
 [Helpers/TranslationHelper.cs](BuildingXamarinStudioAddins/Helpers/TranslationHelper.cs)
 
 #### ExtensionPointHelper
 [Helpers/ExtensionPointHelper.cs](BuildingXamarinStudioAddins/Helpers/ExtensionPointHelper.cs)
+
+Given an extension point path such as "/MonoDevelop/Ide/Commands", this helper method retrieves all nodes within that extension and then renders the ids that can be referenced within the Manifest.addin.xml document.
+
+This helper is extremely useful when diagnosing why an addin's command isn't functioning as expected. Frequently another command consumes an event BEFORE your addin; this method let's you insepect an extension path and find the id's of the nodes so you can inject your command before it using the `insertbefore` or `insertafter` attributes.
 
 ## Testing And Debugging
 When we are ready to test and debug our addin, we can simply press the **Play** button in Xamarin Studio. This will startup our addin within a new Xamarin Studio instance and allow us to debug it as we would *any* other Xamarin Studio application:
