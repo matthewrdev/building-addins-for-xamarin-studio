@@ -74,7 +74,7 @@ One of the most common objects we'll create when building a Xamarin Studio addin
 A `CommandHandler` is an action that can be executed within a certain context within Xamarin Studio; we register a
 
 ## Some Essential APIS
-Let's dig through some of the essential APIs that you may need to use
+Let's dig through some of the essential APIs that you may need to use:
 
 #### IdeApp
 The `MonoDevelop.Ide.IdeApp` static class is your entry point into most of Xamarin Studio. It exposes the `Workbench`, the `Workspace`, various services and life cycle methods such as when the IDE is exiting.
@@ -87,9 +87,25 @@ The `Workbench` is used to access the documents that a developer is currently wo
 One of the most commonly used properties is `ActiveDocument`. This property retrieves the current document that a user is working with. From there, we can grab the C# syntax tree, a users project or solution and then analyse or make changes to their source code.
 
 #### IdeApp.Workspace
+The `Workspace` is used to access the general state of the Ide during a user session.
+
+We can open new projects and documents, detect file open, close and editing events and much, much more.
+
+The workspace is most commonly used to detect changes to a users project and documents and then update a state within our addins.
 
 #### RefactoringService
-When developing an Addin, we'll often want to make changes to a users source code and have undo-redo history
+When developing an Addin, we'll often want to make changes to a users source code and have undo-redo history recorded.
+
+The `RefactoringService` allows us to apply changes to a users document and have undo-redo history automatically recorded.
+
+When applying a change, we provide the `RefactoringService` instances of the `MonoDevelop.Refactoring.Change` object that the service should apply.
+
+Some common changes we can perform:
+ * `TextReplaceChange`: Replaces a section of text within a document with new content.
+ * `SaveProjectChange`: Saves a targetted project.
+ * `CreateFileChange`: Creates a new file with the provided content.
+
+ The `Change` object is abstract so we can implement our own custom refactoring changes if we'd like.
 
 #### PropertyService
 The static class `MonoDevelop.Core.PropertyService` is used to store user configurations for the Ide installation.
@@ -105,7 +121,7 @@ if (!PropertyService.HasValue("my_addin.is_first_run")
 }
 ````
 
-Here we
+Here we:
  * Use `HasValue` to determine if a value is stored within the users properties.
  * Use `Get` to retrive a value from the `PropertyService`; note that we can provide a default value to return when there property does exist.
  * Use `Set` to store a new property.
