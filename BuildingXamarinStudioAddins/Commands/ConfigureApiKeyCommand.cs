@@ -34,6 +34,9 @@ namespace BuildingXamarinStudioAddins
 			info.Visible = true;
 		}
 
+		/// <summary>
+		/// The Run method is used here to display the 
+		/// </summary>
 		protected override void Run()
 		{
 			var dialog = new ConfigureApiKeyDialog ();

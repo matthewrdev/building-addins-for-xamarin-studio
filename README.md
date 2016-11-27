@@ -82,7 +82,9 @@ The `MonoDevelop.Ide.IdeApp` static class is your entry point into most of Xamar
 Typically the `IdeApp` class is used to access the `Workbench` and `Workspace`.
 
 #### IdeApp.Workbench
-The
+The `Workbench` is used to access the documents that a developer is currently working with. We can load, create, reparse and close documents, access editor pads, access the root ide window and much much more.
+
+One of the most commonly used properties is `ActiveDocument`. This property retrieves the current document that a user is working with. From there, we can grab the C# syntax tree, a users project or solution and then analyse or make changes to their source code.
 
 #### IdeApp.Workspace
 

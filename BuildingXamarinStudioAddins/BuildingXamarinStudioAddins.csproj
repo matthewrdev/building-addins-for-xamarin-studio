@@ -42,9 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="..\init.sh">
-      <Link>init.sh</Link>
-    </None>
     <None Include="..\LICENSE">
       <Link>LICENSE</Link>
     </None>
@@ -53,6 +50,9 @@
     </None>
     <None Include="..\README.md">
       <Link>README.md</Link>
+    </None>
+    <None Include="..\addin-project.xml">
+      <Link>addin-project.xml</Link>
     </None>
   </ItemGroup>
   <ItemGroup>
