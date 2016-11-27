@@ -133,10 +133,27 @@ Here we:
 ## Packaging Your Addin
 Before we send out our addin into the big, wide world it's best practice to verify everything works as a final app package.
 
-Xamarin Studio addins are distributed in the `.mpack ` format; this is a zip archive that contains all your Addin assemblies and resources in a convenient bundle.
+Xamarin Studio addins are distributed in the `.mpack` format; this is a zip archive that contains all your Addin assemblies and resources in a convenient bundle.
 
+We use `mdtool` to accomplish this. On a typical OSX installation, `mdtool` will be location at `/Applications/Xamarin Studio.app/Contents/MacOS/mdtool`.
 
+If `mdtool` is not present at that location, you can find it using the following shell script:
 
+```
+find / -name mdtool
+```
+
+To package an addin, we use provide the path to our addin assembly to mdtools `setup pack` command like so:
+
+```
+/Applications/Xamarin\ Studio.app/Contents/MacOS/mdtool setup pack ./MyAddin/bin/Release/MyAddin.dll -d:./builds/mpack/$BUILD_DATE
+```
+
+This command will generate a `*.mpack` file that bundles your addin. You can then install this addin via the **Addin Manager** using **Install from file**:
+
+![install from mpack](images/install-mpack.png)
+
+For a convient packaging script, see [package_mpack.sh](package_mpack.sh)
 
 ## Publishing Your Addin
 Xamarin Studio addins can be

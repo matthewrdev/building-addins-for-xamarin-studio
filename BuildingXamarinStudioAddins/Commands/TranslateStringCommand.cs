@@ -99,8 +99,7 @@ namespace BuildingXamarinStudioAddins
 				var translation = TranslationHelper.Translate (text, language);
 
 				if (!string.IsNullOrEmpty (translation)) {
-
-					// 
+					
 					TextReplaceChange translateChange = new TextReplaceChange ();
 					translateChange.RemovedChars = token.Text.Length;
 					translateChange.InsertedText = "\"" + translation + "\"";
@@ -109,8 +108,6 @@ namespace BuildingXamarinStudioAddins
 					translateChange.FileName = doc.FileName;
 
 					var monitor = IdeApp.Workbench.ProgressMonitors.GetBackgroundProgressMonitor ("Apply translation", null);
-
-					// Here we apply 
 					RefactoringService.AcceptChanges (monitor, new List<Change> () { translateChange });
 				}
 			}
