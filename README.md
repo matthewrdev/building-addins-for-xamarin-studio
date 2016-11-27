@@ -105,7 +105,7 @@ Some common changes we can perform:
  * `SaveProjectChange`: Saves a targetted project.
  * `CreateFileChange`: Creates a new file with the provided content.
 
- The `Change` object is abstract so we can implement our own custom refactoring changes if we'd like.
+The `Change` object is abstract so we can implement our own custom refactoring changes if we'd like.
 
 #### PropertyService
 The static class `MonoDevelop.Core.PropertyService` is used to store user configurations for the Ide installation.
@@ -179,11 +179,15 @@ Let's go through this line by line:
  * **BuildFile**: The file that the addin server should build.
  * **BuildConfiguration**: The configuration that the addin should be built under.
 
- After we've added this, visit the Addin Repository website and create an account. In the right side of the site click **Create a new project**.
+After we've added this, visit the Addin Repository website and create an account. In the right side of the site click **Create a new project**.
 
- Here we configure the build server and tell where our addin's source code lives, the version control type, where the build configuration may be found and how to handle releases:
+Here we configure the build server and tell where our addin's source code lives, the version control type, where the build configuration may be found and how to handle releases:
 
- ![addin build configuration](images/addin-repo-config.png)
+![addin build configuration](images/addin-repo-config.png)
+
+For this addin I've chosen to only release the tagged **1.0.0**; this is completely optional. You could have the addin server build and publish each time the repository changes if you so choose to.
+
+
 
 ## Resources
 
