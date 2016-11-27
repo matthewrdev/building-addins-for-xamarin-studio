@@ -1,7 +1,7 @@
 # Building Xamarin Studio Addins
 **Matthew Robbins - Creator Of [MFractor](http://www.mfractor.com/)**
 
-This repository is the accompanying source code for the Xamarin University guest lecture, **Building Xamarin Studio Addins For Xamarin Studio**.
+This repository is the accompanying source code for the Xamarin University guest lecture, **Building Xamarin Studio Addins**.
 
 Learn how to take an Addin from concept to deployment using the Addin Maker, Xamarin Studio and mdtool.
 
@@ -14,24 +14,24 @@ This source code contains a **Translate String** Addin; users can right click on
   * Installing the Addin Maker
   * Creating Your First Addin
   * The MonoDevelop Extension Model
-  * The Addin Manifest
-  * Addin References
+  * An Addin Project Structure
   * Command Handlers
   * Some Essential APIs
+  * The Translation Addin
   * Testing and Debugging
   * Packaging Your Addin
   * Publishing Your Addin
-  * Resources
-  * Closing Words
+  * Resources and Docs
+  * Summary
 
 ## Installing the Addin Maker
 Let's get started by installing the Addin Maker into Xamarin Studio.
 
 The Addin Maker is an [open source](https://github.com/mhutch/MonoDevelop.AddinMaker), freely available addin developed by [Mikayla Hutchinson](https://twitter.com/mjhutchinson) that enables development and debugging of Xamarin Studio addins *within* Xamarin Studio itself.
 
-We can install the Addin Maker through Xamarin Studios *Addin Manager*; click on the **Xamarin Studio** main menu then **Addins..** to open the Addin Manager.
+We can install the Addin Maker through Xamarin Studios *Addin Manager*; click on the **Xamarin Studio** main menu then **Addins...** to open the Addin Manager.
 
-Browse to **Gallery** and then select the **Addin Development**.
+Browse to **Gallery**, select the **Addin Development** and then **Addin Maker**:
 
 ![Add repository reference](images/addin-maker.gif)
 
@@ -55,7 +55,6 @@ Before we get coding, it's very important to cover some theory.
 
 MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third
 
-
 ## An Addin Project Structure
 
 You'll see we now have a blank project with a few files under the projects **Properties** folder:
@@ -63,8 +62,12 @@ You'll see we now have a blank project with a few files under the projects **Pro
 ![The Addin project structure](images/addin-project-structure.png)
 
 #### Manifest.addin.xml
+The
 
 #### AddinInfo.cs
+The [AddinInfo.cs](uildingXamarinStudioAddins/Propeties/AddinInfo.cs) file contains the assembly level attributes
+
+#### Addin References
 
 
 ## Command Handlers
@@ -126,15 +129,53 @@ Here we:
  * Use `Set` to store a new property.
  * Use `SaveProperties` to commit our changes to the properties. You **must** do this to ensure your properties are persisted between Ide sessions.
 
-## Testing And Debugging
+## The Translation Addin
+Let's go over the files within our sample addin and explore what they do:
 
+#### StartupHandler
+[StartupHandler.cs](BuildingXamarinStudioAddins/StartupHandler.cs)
+
+The startup handler will detect when the Ide is first opened and perform any startup initialisation logic. It implements `MonoDevelop.Ide.CommandHandler` and is is injected into the *extension path* `/MonoDevelop/Ide/StartupHandlers` within the manifest.
+
+When the Ide starts up, it will collect all commands in that extension point and invoke the `Run` method.
+
+In this addin, we check to see if the user has a translation api key set and show our configuration dialog if they haven't.
+
+#### TranslateStringCommand
+[Commands/TranslateStringCommand.cs](BuildingXamarinStudioAddins/Commands/TranslateStringCommand.cs)
+
+
+#### ConfigureApiKeyCommand
+[Commands/ConfigureApiKeyCommand.cs](BuildingXamarinStudioAddins/Commands/ConfigureApiKeyCommand.cs)
+
+th
+
+
+#### ConfigureApiKeyDialog
+[Dialogs/ConfigureApiKeyDialog.cs](BuildingXamarinStudioAddins/Dialogs/ConfigureApiKeyDialog.cs)
+
+#### SyntaxTokenHelper
+[Helpers/SyntaxTokenHelper.cs](BuildingXamarinStudioAddins/Helpers/SyntaxTokenHelper.cs)
+
+#### TranslationHelper
+[Helpers/TranslationHelper.cs](BuildingXamarinStudioAddins/Helpers/TranslationHelper.cs)
+
+#### ExtensionPointHelper
+[Helpers/ExtensionPointHelper.cs](BuildingXamarinStudioAddins/Helpers/ExtensionPointHelper.cs)
+
+## Testing And Debugging
+When we are ready to test and debug our addin, we can simply press the **Play** button in Xamarin Studio. This will startup our addin within a new Xamarin Studio instance and allow us to debug it as we would *any* other Xamarin Studio application:
+
+![debug addin](images/running-your-addin.png)
+
+You can also select your build profile (such as Debug or Release) as well as adding custom configuration.
 
 ## Packaging Your Addin
-Before we send out our addin into the big, wide world it's best practice to verify everything works as a final app package.
+Once your done debugging your addin and before we send out our addin into the big, wide world it's best practice to verify everything works as a final app package.
 
 Xamarin Studio addins are distributed in the `.mpack` format; this is a zip archive that contains all your Addin assemblies and resources in a convenient bundle.
 
-We use `mdtool` to accomplish this. On a typical OSX installation, `mdtool` will be location at `/Applications/Xamarin Studio.app/Contents/MacOS/mdtool`.
+We use `mdtool` to take an Addin assembly and bundle it into an mpack. On a typical OSX installation, `mdtool` will be location at `/Applications/Xamarin Studio.app/Contents/MacOS/mdtool`.
 
 If `mdtool` is not present at that location, you can find it using the following shell script:
 
@@ -145,14 +186,14 @@ find / -name mdtool
 To package an addin, we use provide the path to our addin assembly to mdtools `setup pack` command along with an output directory using the `-d:` flag like so:
 
 ```
-/Applications/Xamarin\ Studio.app/Contents/MacOS/mdtool setup pack ./MyAddin/bin/Release/MyAddin.dll -d:./builds/mpack/$BUILD_DATE
+/Applications/Xamarin\ Studio.app/Contents/MacOS/mdtool setup pack ./MyAddin/bin/Release/MyAddin.dll -d:./builds
 ```
 
 This command will generate a `*.mpack` file that bundles your addin. You can then install this addin via the **Addin Manager** using **Install from file**:
 
 ![install from mpack](images/install-mpack.png)
 
-For a convenient packaging script, see [package_mpack.sh](package_mpack.sh)
+For a convenient packaging script, see the [package_mpack.sh](package_mpack.sh) included in this repository.
 
 ## Publishing Your Addin
 We are almost there!
@@ -189,8 +230,34 @@ For this addin I've chosen to only release the tagged **1.0.0**; this is complet
 
 Click **Save** and now wait for your addin to build...
 
-After you're addin has been built it will appear under the **Sources** title.
+After you're addin has been built it will appear under the **Sources** title:
 
-## Resources
+![publish addin menu](images/publish-addin.png)
 
-## Closing Words
+Simply click **Publish** and voila, your addin will appear inside the **Gallery** section of the **Addin Manager** in Xamarin Studio:
+
+![deployed addin](images/deployed-addin.png)
+
+## Resources and Documentation
+While you're building your shiny addin, you'll often need to consult documentation to figure out how to build what you want...
+
+The bad news here is that most of the APIs are undocumented; you'll frequently need to consult the MonoDevelop source code to figure out how to implement things. The source code for MonoDevelop can be [found here](https://github.com/mono/monodevelop).
+
+Apart from the MonoDevelop source code, here is a list of resource I have found useful when developing [MFractor](http://www.mfractor.com/):
+
+ * [**Introduction to Mono Addins**](http://www.mono-project.com/archived/introduction_to_monoaddins/): An overview of the Mono extension model.
+ * [**Extending Xamarin Studio with Add-Ins**](https://developer.xamarin.com/guides/cross-platform/xamarin-studio/customizing-ide/extending_xamarin_studio_with_addins/): A introductory tutorial on building Xamarin Studio addins.
+ * [**Extension Tree Reference**](http://www.monodevelop.com/developers/articles/extension-tree-reference/): An in-depth guide to the available extension points within MonoDevelop.
+
+I strongly encourage joining the [**Xamarin Studio Addins**](https://xamarinchat.slack.com/archives/xamarin-studio-addins) Slack channel on the Xamarin Slack. I (Matthew Robbins) am generally available to answer questions and help investigate how to implement.
+
+Another option is to reach out directly to me via Twitter; send a tweet to [@matthewrdev](https://twitter.com/matthewrdev) and I'll do my best to help.
+
+## Summary
+In this tutorial we've learnt how to install the Addin Maker, built our very first addin, packaged it and then deployed it to the MonoDevelop addin repository.
+
+Good luck and have fun building your own Xamarin Studio addins 🤘
+
+**Matthew Robbins - Creator Of [MFractor](http://www.mfractor.com/)**
+
+![mfractor logo](images/logo-horizontal.png)

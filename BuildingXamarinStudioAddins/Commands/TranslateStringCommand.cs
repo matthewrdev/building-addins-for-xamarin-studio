@@ -39,7 +39,15 @@ namespace BuildingXamarinStudioAddins
 		}
 
 		/// <summary>
-		/// The Update method is a 
+		/// The Update method is used to determine if the command can run within the current context.
+		/// 
+		/// Note that we have overriden the Update which provides a CommandArrayInfo object; in the 
+		/// manifest we provided 'array' to the type attribute. This specifies to the command engine that
+		/// this command provides multiple choices that the user can execute.
+		/// 
+		/// We provide a CommandInfoSet object into the provided CommandArrayInfo to specify all the choices
+		/// are user can make when running our command; we provide multiple 'CommandInfos' to specify what the user
+		/// can execute.
 		/// </summary>
 		/// <param name="info">Info.</param>
 		protected override void Update(CommandArrayInfo info)
