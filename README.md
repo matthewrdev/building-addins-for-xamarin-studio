@@ -143,7 +143,7 @@ If `mdtool` is not present at that location, you can find it using the following
 find / -name mdtool
 ```
 
-To package an addin, we use provide the path to our addin assembly to mdtools `setup pack` command like so:
+To package an addin, we use provide the path to our addin assembly to mdtools `setup pack` command along with an output directory using the `-d:` flag like so:
 
 ```
 /Applications/Xamarin\ Studio.app/Contents/MacOS/mdtool setup pack ./MyAddin/bin/Release/MyAddin.dll -d:./builds/mpack/$BUILD_DATE
@@ -153,10 +153,37 @@ This command will generate a `*.mpack` file that bundles your addin. You can the
 
 ![install from mpack](images/install-mpack.png)
 
-For a convient packaging script, see [package_mpack.sh](package_mpack.sh)
+For a convenient packaging script, see [package_mpack.sh](package_mpack.sh)
 
 ## Publishing Your Addin
-Xamarin Studio addins can be
+We are almost there!
+
+The last thing we want to do is to include our Addin into the MonoDevelop Addin Repository; this online repository will build, package and host our addin and then make it available within the **Addin Manager** within Xamarin Studio.
+
+Firstly, we need to provide an **addin-project.xml** file that tells the addin repository how to build and then package our addin:
+
+```
+<AddinProject appVersion="6.0">
+    <Project platforms="Mac Win32">
+        <AddinFile>BuildingXamarinStudioAddins/bin/Release/BuildingXamarinStudioAddins.dll</AddinFile>
+        <BuildFile>BuildingXamarinStudioAddins.sln</BuildFile>
+        <BuildConfiguration>Release</BuildConfiguration>
+    </Project>
+</AddinProject>
+```
+
+Let's go through this line by line:
+ * **AddinProject**: This must be the root element and it specifies the app version our addin targets at a minimum. 6.0 means that our addin **will not** be installable on versions of Xamarin Studio lower than 6.0.
+ * **Project**: Specify the platforms we are building for.
+ * **AddinFile**: Informs the build server where the final assembly it should package will be found relative to the root of our repository.
+ * **BuildFile**: The file that the addin server should build.
+ * **BuildConfiguration**: The configuration that the addin should be built under.
+
+ After we've added this, visit the Addin Repository website and create an account. In the right side of the site click **Create a new project**.
+
+ Here we configure the build server and tell where our addin's source code lives, the version control type, where the build configuration may be found and how to handle releases:
+
+ ![addin build configuration](images/addin-repo-config.png)
 
 ## Resources
 
