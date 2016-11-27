@@ -53,20 +53,19 @@ Go ahead and create your first addin!
 ## The MonoDevelop Extension Model
 Before we get coding, it's very important to cover some theory.
 
-MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture
+MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third
 
 
-
-
-## The Addin Manifest
+## An Addin Project Structure
 
 You'll see we now have a blank project with a few files under the projects **Properties** folder:
 
 ![The Addin project structure](images/addin-project-structure.png)
 
+#### Manifest.addin.xml
 
+#### AddinInfo.cs
 
-## Project Addin References
 
 ## Command Handlers
 One of the most common objects we'll create when building a Xamarin Studio addin are implementations of `CommandHandler`'s.
@@ -173,6 +172,7 @@ Firstly, we need to provide an **addin-project.xml** file that tells the addin r
 ```
 
 Let's go through this line by line:
+
  * **AddinProject**: This must be the root element and it specifies the app version our addin targets at a minimum. 6.0 means that our addin **will not** be installable on versions of Xamarin Studio lower than 6.0.
  * **Project**: Specify the platforms we are building for.
  * **AddinFile**: Informs the build server where the final assembly it should package will be found relative to the root of our repository.
@@ -187,7 +187,9 @@ Here we configure the build server and tell where our addin's source code lives,
 
 For this addin I've chosen to only release the tagged **1.0.0**; this is completely optional. You could have the addin server build and publish each time the repository changes if you so choose to.
 
+Click **Save** and now wait for your addin to build...
 
+After you're addin has been built it will appear under the **Sources** title.
 
 ## Resources
 
