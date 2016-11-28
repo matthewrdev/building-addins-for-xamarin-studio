@@ -11,9 +11,9 @@ This source code contains a **Translate String** Addin; users can right click on
 
 ### Table of Contents
 
+  * The MonoDevelop Extension Model
   * Installing the Addin Maker
   * Creating Your First Addin
-  * The MonoDevelop Extension Model
   * An Addin Project Structure
   * Some Essential APIs
   * The Translation Addin
@@ -22,6 +22,15 @@ This source code contains a **Translate String** Addin; users can right click on
   * Publishing Your Addin
   * Resources and Docs
   * Summary
+
+## The MonoDevelop Extension Model
+Before we get coding, it's very important to cover some theory.
+
+MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third party libraries to extend behavior within the main application. An extension path is syntactically formatted as a *root canonical path* that refers to the application, library and behavior being extended.
+
+For example, the source editor addin in Xamarin Studio exposes the *Extension Path* `/MonoDevelop/SourceEditor2/ContextMenu/Editor` that let's third parties inject commands into the right click context menu. In our manifest (discussed later) we can declare new extension paths for third parties and/or inject new behaviour into other extension paths.
+
+An in-depth discussion on the extension model is beyond the scope of this tutorial; for in-depth information please read the [Mono Extensino Model documentation](http://www.mono-project.com/archived/introduction_to_monoaddins/#the-extension-model).
 
 ## Installing the Addin Maker
 Let's get started by installing the Addin Maker into Xamarin Studio.
@@ -49,18 +58,9 @@ Select the **File** main menu item and then **New Solution**. Under **Miscellane
 
 Go ahead and create your first addin!
 
-## The MonoDevelop Extension Model
-Before we get coding, it's very important to cover some theory.
-
-MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third party libraries to extend behavior within the main application. An extension path is syntactically formatted as a *root canonical path* that refers to the application, library and behavior being extended.
-
-For example, the source editor addin in Xamarin Studio exposes the *Extension Path* `/MonoDevelop/SourceEditor2/ContextMenu/Editor` that let's third parties inject commands into the right click context menu. In our manifest (discussed later) we can declare new extension paths for third parties and/or inject new behaviour into other extension paths.
-
-An in-depth discussion on the extension model is beyond the scope of this tutorial; for in-depth information please read the [Mono Extensino Model documentation](http://www.mono-project.com/archived/introduction_to_monoaddins/#the-extension-model).
-
 ## An Addin Project Structure
 
-You'll see we now have a blank project with a few files under the projects **Properties** folder:
+After you have created a see we now have a blank project with a few files under the projects **Properties** folder:
 
 ![The Addin project structure](images/addin-project-structure.png)
 
