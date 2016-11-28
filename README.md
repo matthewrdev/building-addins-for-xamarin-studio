@@ -113,7 +113,7 @@ This is a non-exhaustive list of what can be used within the **Manifest.addin.xm
 
 Our projects addin info file contains the assembly level attributes that specifies the version, id, name, descriptoin and much more to the IDE when our addin is installed.
 
-Let's take a look at what our translation addin exposes:
+These are the assembly attributes that our translation addin uses.
 
 ```
 using Mono.Addins;
@@ -132,6 +132,19 @@ using Mono.Addins.Description;
 [assembly: AddinUrl("https://github.com/matthewrdev/building-addins-for-xamarin-studio")]
 ```
 
+Let's review what these do:
+
+ * The `Addin` assembly attribute specifies Id, namespace and version of your addin.
+ * The `AddinName` assembly attribute specifies the Name of your addin.  The value that you provide here be the name that appears in the Addin Manager.
+ * The `AddinCategory` assembly attribute specifies the addin category of your addin. This is the cateogory name in the Addin Manager that your addin will appear under.
+ * The `AddinDescription` assembly attribute should clearly describe what your addin does. This is the value that appears under the name in the right-hand pane inside the addin manager when a user has selected your addin.
+ * The `AddinAuthor` assembly attribute states the author/owner of the addin
+ * The `AddinUrl` assembly attribute provides a link the user can click on to get more information about your addin. This is the url that will open when the user clicks the "More Information" button in the Addin Manager.
+
+When the addin is installed into Xamarin Studio, the above attributes control how it is presented in the Addin Manager detail pane:
+
+![addin detail view](images/addin-info.png)
+
 #### Addin References
 In addition to the standard **References** and **Packages** project references, an addin also has the concept of **Addin References**.
 
@@ -149,7 +162,7 @@ When doing this, even though IntelliSense and the .NET apis for the source code 
 
 ![Adding an addin reference](images/add-addin-reference.gif)
 
-If we do not do this, our addin *might* silently fail to load and you'll spend the next hour in frustration before finally finding an obscure log message telling informing you are missing an addin reference. Save yourself the stress and always include addin references as you are using them!
+If we do not do this, our addin *might* silently fail to load and you'll spend the next hour in frustration before finally finding an obscure log message happily informing you are missing an addin reference. Save yourself the stress and always include addin references as you are using them!
 
 ## Some Essential APIS
 Before we review the translation addin, let's dig through some of the essential APIs that are used in this addin:
@@ -225,16 +238,17 @@ In this addin, we check to see if the user has a translation api key set and sho
 #### TranslateStringCommand
 [Commands/TranslateStringCommand.cs](BuildingXamarinStudioAddins/Commands/TranslateStringCommand.cs)
 
-The translate string command is injected into the right click context menu using the `/MonoDevelop/SourceEditor2/ContextMenu/Editor`
+The translate string command is injected into the right click context menu using the `/MonoDevelop/SourceEditor2/ContextMenu/Editor` extension path. It will expose 4 translation options for the user to select when they right click on a C# string literal.
 
 #### ConfigureApiKeyCommand
 [Commands/ConfigureApiKeyCommand.cs](BuildingXamarinStudioAddins/Commands/ConfigureApiKeyCommand.cs)
 
-th
-
+The configure api key command is injected into the **Tools** menu using the `/MonoDevelop/Ide/MainMenu/Tools` extension path and will display the API key configuration dialog when selected.
 
 #### ConfigureApiKeyDialog
 [Dialogs/ConfigureApiKeyDialog.cs](BuildingXamarinStudioAddins/Dialogs/ConfigureApiKeyDialog.cs)
+
+The configure api key dialog show how to implement a custom GUI using Gtk. It accepts a string input to set the API key for our translation service.
 
 #### SyntaxTokenHelper
 [Helpers/SyntaxTokenHelper.cs](BuildingXamarinStudioAddins/Helpers/SyntaxTokenHelper.cs)
@@ -251,6 +265,8 @@ This class offers a *tiny* peek into what can be accomplished using Roslyn.
 
 #### TranslationHelper
 [Helpers/TranslationHelper.cs](BuildingXamarinStudioAddins/Helpers/TranslationHelper.cs)
+
+The translation helper wraps a REST query to Google Translation Services to take a string from the users source code and translate it to another language.
 
 #### ExtensionPointHelper
 [Helpers/ExtensionPointHelper.cs](BuildingXamarinStudioAddins/Helpers/ExtensionPointHelper.cs)
