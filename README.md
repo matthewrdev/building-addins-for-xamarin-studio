@@ -52,11 +52,11 @@ Go ahead and create your first addin!
 ## The MonoDevelop Extension Model
 Before we get coding, it's very important to cover some theory.
 
-MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third party libraries to extend behavior within the main application. An extension path
+MonoDevelop is built upon an extensible architecture known as an *Extension Model*. This architecture uses *Extension Path* to allow third party libraries to extend behavior within the main application. An extension path is syntactically formatted as a *root canonical path* that refers to the application, library and behavior being extended.
 
-For example, the source editor addin in Xamarin Studio exposes an *Extension Path* that let's third parties inject commands into the right click context menu. In our manifest (discussed later) we can declare
+For example, the source editor addin in Xamarin Studio exposes the *Extension Path* `/MonoDevelop/SourceEditor2/ContextMenu/Editor` that let's third parties inject commands into the right click context menu. In our manifest (discussed later) we can declare new extension paths for third parties and/or inject new behaviour into other extension paths.
 
-An in-depth discussion on the extension model is beyond the scope of this tutorial; for in-depth information please read the Mono Extensino Model documentation.
+An in-depth discussion on the extension model is beyond the scope of this tutorial; for in-depth information please read the [Mono Extensino Model documentation](http://www.mono-project.com/archived/introduction_to_monoaddins/#the-extension-model).
 
 ## An Addin Project Structure
 
@@ -65,15 +65,42 @@ You'll see we now have a blank project with a few files under the projects **Pro
 ![The Addin project structure](images/addin-project-structure.png)
 
 #### Manifest.addin.xml
-The addin manifest defines what we are extending within Xamarin Studio; without this file our
+[Properties/Manifest.addin.xml](BuildingXamarinStudioAddins/Properties/Manifest.addin.xml)
+
+The addin manifest defines what we are extending within Xamarin Studio; without this file our .NET library would be just a plain old assembly to Xamarin Studio! This file **must** be named `Manifest.addin.xml` and be including into the .NET assembly as an `EmbeddedResource`.
+
+Our addin manifest file declares to MonoDevelop / Xamarin Studio *what* our addin extends in the IDE; when Xamarin Studio loads our addin assembly, it inspects for the Manifest.addin.xml embedded resource and loads in our defined behaviour.
+
+Let's take a look at h
+
+The
 
 #### AddinInfo.cs
-The [AddinInfo.cs](uildingXamarinStudioAddins/Propeties/AddinInfo.cs) file contains the assembly level attributes
+[Properties/Manifest.addin.xml](BuildingXamarinStudioAddins/Properties/Manifest.addin.xml)
+
+Our projects addin info file contains the assembly level attributes that specifies to the addin maker
 
 #### Addin References
+In addition to the standard **References** and **Packages** project references, an addin also has the concept of **Addin References**.
+
+An addin reference declares to Xamarin Studio that are addin *depends* on another addin; this means we extend that addins behaviour using one of the extension paths exposed by that adddin.
+
+For example, say we wanted to inject custom behavior into the right click context menu for the source editor; we'd declare a new extension within our manifest and target the `/MonoDevelop/SourceEditor2/ContextMenu/Editor` extension path like so:
+
+```
+<Extension path = "/MonoDevelop/SourceEditor2/ContextMenu/Editor">
+  <CommandItem id = "BuildingXamarinStudioAddins.Commands.TranslateString"/>
+</Extension>
+```
+
+When doing this, even though IntelliSense and the .NET apis for the source code editor may be available in Xamarin Studio we **must** reference the **MonoDevelop.SourceEditor2** addin like so:
+
+![Adding an addin reference](images/add-addin-reference.gif)
+
+If we do not do this, our addin *might* silently fail to load and you'll spend the next hour in frustration before finally finding an obscure log message telling informing you are missing an addin reference. Save yourself the stress and always include addin references as you are using them!
 
 ## Some Essential APIS
-Before we review the translation addin, let's dig through some of the essential APIs that are used:
+Before we review the translation addin, let's dig through some of the essential APIs that are used in this addin:
 
 #### CommandHandler
 One of the most common objects we'll create when building a Xamarin Studio addin are implementations of `CommandHandler`'s.
@@ -146,6 +173,7 @@ In this addin, we check to see if the user has a translation api key set and sho
 #### TranslateStringCommand
 [Commands/TranslateStringCommand.cs](BuildingXamarinStudioAddins/Commands/TranslateStringCommand.cs)
 
+The translate string command is injected into the right click context menu using the `/MonoDevelop/Ide/StartupHandlers`
 
 #### ConfigureApiKeyCommand
 [Commands/ConfigureApiKeyCommand.cs](BuildingXamarinStudioAddins/Commands/ConfigureApiKeyCommand.cs)
@@ -265,7 +293,18 @@ Apart from the MonoDevelop source code, here is a list of resource I have found 
  * [**Extending Xamarin Studio with Add-Ins**](https://developer.xamarin.com/guides/cross-platform/xamarin-studio/customizing-ide/extending_xamarin_studio_with_addins/): A introductory tutorial on building Xamarin Studio addins.
  * [**Extension Tree Reference**](http://www.monodevelop.com/developers/articles/extension-tree-reference/): An in-depth guide to the available extension points within MonoDevelop.
 
-I strongly encourage joining the [**Xamarin Studio Addins**](https://xamarinchat.slack.com/archives/xamarin-studio-addins) Slack channel on the Xamarin Slack. I (Matthew Robbins) am generally available to answer questions and help investigate how to implement.
+In addition to the existing documentation, here is a non-exhaustive list of some existing addins that can be used as reference material:
+
+ * [**ServiceStack**](https://github.com/ServiceStack/ServiceStackVS): Exposes service stack into Xamarin Studio.
+ * [**Addin Maker**](https://github.com/mhutch/MonoDevelop.AddinMaker): The addin maker for Xamarin Studio.
+ * [**MonoDevelop Addin Packager**](https://github.com/matthewrdev/monodevelop-addin-packager): (*deprecated*) Helper utility to package the current Xamarin Studio addin project.
+ * [**Xamarin.Android Open Layout Declaration**](https://github.com/matthewrdev/xamarin-android-open-layout-definition): (*deprecated*) Shows how to use NRefactory (a *deprecated* syntax tree) to open an android axml layout.
+ * [**MFractor.Installer**](https://github.com/matthewrdev/mfractor-installer): An instal;er addin that downloads and injects [MFractor](https://www.mfractor.com) into Xamarin Studio.
+ * [**Xamarin.Android String Extractor**](https://github.com/matthewrdev/xamarin-android-string-extractor): (*deprecated*) Shows how to use NRefactory (a *deprecated* syntax tree) to resolve string literal and then extract it into an android string resource file.
+
+*Please note that several of my addins have been deprecated and have moved into MFractor itself. These repositories may not even work anymore and have remained open source for reference only*
+
+I strongly encourage joining the [**Xamarin Studio Addins**](https://xamarinchat.slack.com/archives/xamarin-studio-addins) Slack channel on the Xamarin Slack. I (Matthew Robbins) am generally available to answer questions and help investigate how to implement ideas.
 
 Another option is to reach out directly to me via Twitter; send a tweet to [@matthewrdev](https://twitter.com/matthewrdev) and I'll do my best to help.
 
