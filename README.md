@@ -9,7 +9,7 @@ This source code contains a **Translate String** Addin; users can right click on
 
 ![translation demo](images/translate-demo.gif)
 
-### Table of Contents
+## Table of Contents
 
   * The MonoDevelop Extension Model
   * Installing the Addin Maker
@@ -30,7 +30,7 @@ MonoDevelop is built upon an extensible architecture known as an *Extension Mode
 
 For example, the source editor addin in Xamarin Studio exposes the *Extension Path* `/MonoDevelop/SourceEditor2/ContextMenu/Editor` that let's third parties inject commands into the right click context menu. In our manifest (discussed later) we can declare new extension paths for third parties and/or inject new behaviour into other extension paths.
 
-An in-depth discussion on the extension model is beyond the scope of this tutorial; for in-depth information please read the [Mono Extensino Model documentation](http://www.mono-project.com/archived/introduction_to_monoaddins/#the-extension-model).
+An in-depth discussion on the extension model is beyond the scope of this tutorial; for in-depth information please read the [Mono Extension Model documentation](http://www.mono-project.com/archived/introduction_to_monoaddins/#the-extension-model).
 
 ## Installing the Addin Maker
 Let's get started by installing the Addin Maker into Xamarin Studio.
@@ -60,7 +60,7 @@ Go ahead and create your first addin!
 
 ## An Addin Project Structure
 
-After you have created a see we now have a blank project with a few files under the projects **Properties** folder:
+We now have a blank project with a few files under the projects **Properties** folder:
 
 ![The Addin project structure](images/addin-project-structure.png)
 
@@ -69,16 +69,68 @@ After you have created a see we now have a blank project with a few files under 
 
 The addin manifest defines what we are extending within Xamarin Studio; without this file our .NET library would be just a plain old assembly to Xamarin Studio! This file **must** be named `Manifest.addin.xml` and be including into the .NET assembly as an `EmbeddedResource`.
 
-Our addin manifest file declares to MonoDevelop / Xamarin Studio *what* our addin extends in the IDE; when Xamarin Studio loads our addin assembly, it inspects for the Manifest.addin.xml embedded resource and loads in our defined behaviour.
+Our addin manifest file declares to MonoDevelop / Xamarin Studio *what* our addin extends in the IDE; when Xamarin Studio loads our addin assembly, it inspects for the Manifest.addin.xml embedded resource and loads in our defined behavior.
 
-Let's take a look at h
+Take a look at slimmed version of the manifest code for the translation addin included in this repository:
 
-The
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionModel>
+
+	<Extension path = "/MonoDevelop/SourceEditor2/ContextMenu/Editor">
+		<CommandItem id = "BuildingXamarinStudioAddins.Commands.TranslateString"/>
+	</Extension>
+
+    <Extension path = "/MonoDevelop/Ide/Commands">
+        <Command id = "BuildingXamarinStudioAddins.Commands.TranslateString"
+             _label = "Translate to..."
+             shortcut = "Alt|T"
+			       type="array"
+             _description = "Translates a C# string from english to a user selected other language"
+         	   defaultHandler = "BuildingXamarinStudioAddins.TranslateStringCommand"/>
+    </Extension>
+</ExtensionModel>
+```
+
+Let's review what this does:
+
+ * **ExtensionModel** is alway the root node and defines that we are building a Xamarin Studio addin.
+  * The first **Extension** node tells Xamarin Studio to inject behavior into the `/MonoDevelop/SourceEditor2/ContextMenu/Editor` extenstion path. Here the `path` attribute defines the path we are extending.
+    * **CommandItem** references a command by id to be inserted into the extension path. The `id` attribute references a `CommandHandler` that we've declared using that id.
+  * The following **Extension** node
+    * The **Command** node declares an implementation of `MonoDevelop.Ide.CommandHandler` to insert into the Ide.
+      * **Required** The `id` attribute defines the identifier that's used to refer to the command within the addin manifest.
+      * **Optional - Recommended** The `_label` attribute specifies the text to display in UI's such as menu items.
+      * **Optional** The `shortcut` attribute allows us to define a keyboard shortcut the user can press to trigger our command. When pressed, the IDE will invoke the `Update(CommandInfo)` and parameterless `Run` methods of the command handler.
+      * **Optional** The `type` attribute allows the command handler to present multiple user options when set to `array`. When we set this to `array`, the `Update(CommandArrayInfoSet)` and `Run(object)` callbacks will be invoked when the user uses this command.
+      * **Optional - Recommended** The `_description` attribute specifies a verbose description of what the command does to display in UI's such as tooltips.
+      * **Required** The `defaultHandler` attribute references the .NET class to instantiate when the command is inserted into the parent extension point. This must be include the full namespace as well as the class name.
+
+This is a non-exhaustive list of what can be used within the **Manifest.addin.xml** file. Use the **Addin Makers** Xml IntelliSense to further explore what is available.
 
 #### AddinInfo.cs
 [Properties/Manifest.addin.xml](BuildingXamarinStudioAddins/Properties/Manifest.addin.xml)
 
-Our projects addin info file contains the assembly level attributes that specifies to the addin maker
+Our projects addin info file contains the assembly level attributes that specifies the version, id, name, descriptoin and much more to the IDE when our addin is installed.
+
+Let's take a look at what our translation addin exposes:
+
+```
+using Mono.Addins;
+using Mono.Addins.Description;
+
+[assembly: Addin(
+	"BuildingXamarinStudioAddins",
+	Namespace = "BuildingXamarinStudioAddins",
+	Version = "1.0"
+)]
+
+[assembly: AddinName("Translate .NET String")]
+[assembly: AddinCategory("IDE extensions")]
+[assembly: AddinDescription("This addin adds a right click menu item in a C# source code file that translates a given string literal to another langauge.\n\nThis is the accompanying addin to the Xamarin University guest lecture 'Building Xamarin Studio Addins' by Matthew Robbins.")]
+[assembly: AddinAuthor("matthewrobbins")]
+[assembly: AddinUrl("https://github.com/matthewrdev/building-addins-for-xamarin-studio")]
+```
 
 #### Addin References
 In addition to the standard **References** and **Packages** project references, an addin also has the concept of **Addin References**.
@@ -105,7 +157,7 @@ Before we review the translation addin, let's dig through some of the essential 
 #### CommandHandler
 One of the most common objects we'll create when building a Xamarin Studio addin are implementations of `CommandHandler`'s.
 
-A `CommandHandler` is an action that can be executed within a certain context within Xamarin Studio; we register a command handler into an *extension path*, used `Update` to decide if it can execute and finally use `Run` to perform an action.
+A `CommandHandler` is an action that can be executed within a certain context within Xamarin Studio; we register a command handler into the `\MonoDevelop\Ide\Commands` extension path, use `Update` to decide if it can execute and finally use `Run` to perform an action.
 
 #### IdeApp
 The `MonoDevelop.Ide.IdeApp` static class is your entry point into most of Xamarin Studio. It exposes the `Workbench`, the `Workspace`, various services and life cycle methods such as when the IDE is exiting.
@@ -173,7 +225,7 @@ In this addin, we check to see if the user has a translation api key set and sho
 #### TranslateStringCommand
 [Commands/TranslateStringCommand.cs](BuildingXamarinStudioAddins/Commands/TranslateStringCommand.cs)
 
-The translate string command is injected into the right click context menu using the `/MonoDevelop/Ide/StartupHandlers`
+The translate string command is injected into the right click context menu using the `/MonoDevelop/SourceEditor2/ContextMenu/Editor`
 
 #### ConfigureApiKeyCommand
 [Commands/ConfigureApiKeyCommand.cs](BuildingXamarinStudioAddins/Commands/ConfigureApiKeyCommand.cs)
